@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+// otp ke liye db entry create krege jiske baad mail jayegi bia nodemailer using post
+// after that it will verify otp
+// uske baad db me entry hogi user ki
 const mailSender = require("../utils/mailSender");
 
 const OTPSchema = new mongoose.Schema({
