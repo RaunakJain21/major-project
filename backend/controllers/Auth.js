@@ -1,7 +1,3 @@
-// login
-// signup
-// generateotp
-// 
 const bcrypt = require("bcrypt")
 const User = require("../models/User")
 const OTP = require("../models/OTP")
