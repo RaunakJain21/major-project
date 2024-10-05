@@ -1,20 +1,17 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-require('dotenv').config();
+const { MONGODB_URL } = process.env;
 
-const dbConnect = () => {
-    mongoose.connect(process.env.DATABASE_URL, {
-        useUnifiedTopology:true,
+exports.connect = () => {
+    mongoose.connect(MONGODB_URL, {
         useNewUrlParser: true,
-
+        useUnifiedTopology:true,
     })
-    .then(() => console.log("DB ka Connection is Successful"))
+    .then(() => console.log("DB Connected Successfully"))
     .catch( (error) => {
-        console.log("Issue in DB Connection");
-        console.error(error.message);
-        //iska matlab kya h ?
-        process.exit();
-    } );
-}
-
-module.exports = dbConnect;
+        console.log("DB Connection Failed");
+        console.error(error);
+        process.exit(1);
+    } )
+};

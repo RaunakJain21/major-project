@@ -1,7 +1,3 @@
-// otp ke liye db entry create krege jiske baad mail jayegi bia nodemailer using post
-// after that it will verify otp
-// uske baad db me entry hogi user ki
-
 const mongoose = require("mongoose");
 const mailSender = require("../utils/mailSender");
 const emailTemplate = require("../mail/templates/emailVerificationTemplate");
@@ -55,8 +51,3 @@ OTPSchema.pre("save", async function (next) {
 const OTP = mongoose.model("OTP", OTPSchema);
 
 module.exports = OTP;
-
-
-
-module.exports = mongoose.model("OTP", OTPSchema);
-
