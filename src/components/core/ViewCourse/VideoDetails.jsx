@@ -1,29 +1,26 @@
-import React, { useEffect, useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate, useParams } from "react-router-dom"
-
-import "video-react/dist/video-react.css"
-import { useLocation } from "react-router-dom"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {updateCompletedLectures} from "../../../Slice/viewCourseSlice"
+import {markLectureAsComplete} from "../../../services/operations/courseDetailsAPI"
 import { BigPlayButton, Player } from "video-react"
-
-import { markLectureAsComplete } from "../../../services/operations/courseDetailsAPI"
-import { updateCompletedLectures } from "../../../slices/viewCourseSlice"
-import IconBtn from "../../common/IconBtn"
-
+import "video-react/dist/video-react.css"
+import IconBtn from "../../Common/Iconbtn"
+import { useRef } from "react";
 const VideoDetails = () => {
-  const { courseId, sectionId, subSectionId } = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const playerRef = useRef(null)
-  const dispatch = useDispatch()
-  const { token } = useSelector((state) => state.auth)
-  const { courseSectionData, courseEntireData, completedLectures } =
-    useSelector((state) => state.viewCourse)
 
-  const [videoData, setVideoData] = useState([])
+  const {courseId, sectionId, subSectionId} = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const playerRef = useRef(null);
+  const {token} = useSelector((state)=>state.auth);
+  const {courseSectionData, courseEntireData, completedLectures} = useSelector((state)=>state.viewCourse);
+  const location = useLocation();
+
+  const [videoData, setVideoData] = useState([]);
+  const [videoEnded, setVideoEnded] =  useState(false);
+  const [loading, setLoading] = useState(false);
   const [previewSource, setPreviewSource] = useState("")
-  const [videoEnded, setVideoEnded] = useState(false)
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -33,39 +30,62 @@ const VideoDetails = () => {
       } else {
         // console.log("courseSectionData", courseSectionData)
         const filteredData = courseSectionData.filter(
-          (course) => course._id === sectionId
-        )
+          (data) => data._id === sectionId)
         // console.log("filteredData", filteredData)
-        const filteredVideoData = filteredData?.[0]?.subSection.filter(
+        const filteredVideoData =filteredData?.[0]?.subSection.filter(
           (data) => data._id === subSectionId
         )
-        // console.log("filteredVideoData", filteredVideoData)
+        console.log("filteredVideoData", filteredVideoData)
         setVideoData(filteredVideoData[0])
+        console.log("Video Data",videoData)
         setPreviewSource(courseEntireData.thumbnail)
         setVideoEnded(false)
       }
     })()
   }, [courseSectionData, courseEntireData, location.pathname])
 
-  // check if the lecture is the first video of the course
-  const isFirstVideo = () => {
+
+  const isFirstVideo = ()=>{
+    //agar first video h toh prev ka btn nhi dikhana
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     )
 
-    const currentSubSectionIndx = courseSectionData[
-      currentSectionIndx
-    ].subSection.findIndex((data) => data._id === subSectionId)
+    const currentSubSectionIndx = courseSectionData[currentSectionIndx].subSection.findIndex(
+      (data) => data._id === subSectionId)
 
     if (currentSectionIndx === 0 && currentSubSectionIndx === 0) {
+      return true
+    } 
+    else {
+      return false
+    }
+  }
+
+
+  const isLastVideo = ()=>{
+    const currentSectionIndx = courseSectionData.findIndex(
+      (data) => data._id === sectionId
+    )
+
+    const noOfSubsections =
+      courseSectionData[currentSectionIndx].subSection.length
+
+    const currentSubSectionIndx = courseSectionData[currentSectionIndx].subSection.findIndex(
+      (data) => data._id === subSectionId)
+
+    if (
+      currentSectionIndx === courseSectionData.length - 1 &&
+      currentSubSectionIndx === noOfSubsections - 1
+    ) {
       return true
     } else {
       return false
     }
   }
 
-  // go to the next video
-  const goToNextVideo = () => {
+
+  const goToNextVideo = ()=>{
     // console.log(courseSectionData)
 
     const currentSectionIndx = courseSectionData.findIndex(
@@ -80,7 +100,7 @@ const VideoDetails = () => {
     ].subSection.findIndex((data) => data._id === subSectionId)
 
     // console.log("no of subsections", noOfSubsections)
-
+    //same section ki next video mein jaao
     if (currentSubSectionIndx !== noOfSubsections - 1) {
       const nextSubSectionId =
         courseSectionData[currentSectionIndx].subSection[
@@ -89,7 +109,9 @@ const VideoDetails = () => {
       navigate(
         `/view-course/${courseId}/section/${sectionId}/sub-section/${nextSubSectionId}`
       )
-    } else {
+    } 
+    //next section ki first video
+    else {
       const nextSectionId = courseSectionData[currentSectionIndx + 1]._id
       const nextSubSectionId =
         courseSectionData[currentSectionIndx + 1].subSection[0]._id
@@ -99,31 +121,7 @@ const VideoDetails = () => {
     }
   }
 
-  // check if the lecture is the last video of the course
-  const isLastVideo = () => {
-    const currentSectionIndx = courseSectionData.findIndex(
-      (data) => data._id === sectionId
-    )
-
-    const noOfSubsections =
-      courseSectionData[currentSectionIndx].subSection.length
-
-    const currentSubSectionIndx = courseSectionData[
-      currentSectionIndx
-    ].subSection.findIndex((data) => data._id === subSectionId)
-
-    if (
-      currentSectionIndx === courseSectionData.length - 1 &&
-      currentSubSectionIndx === noOfSubsections - 1
-    ) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  // go to the previous video
-  const goToPrevVideo = () => {
+  const goToPrevVideo = ()=>{
     // console.log(courseSectionData)
 
     const currentSectionIndx = courseSectionData.findIndex(
@@ -156,7 +154,7 @@ const VideoDetails = () => {
     }
   }
 
-  const handleLectureCompletion = async () => {
+  const handleLectureCompletion = async()=>{
     setLoading(true)
     const res = await markLectureAsComplete(
       { courseId: courseId, subsectionId: subSectionId },
@@ -167,7 +165,7 @@ const VideoDetails = () => {
     }
     setLoading(false)
   }
-
+  
   return (
     <div className="flex flex-col gap-5 text-white">
       {!videoData ? (
@@ -177,6 +175,7 @@ const VideoDetails = () => {
           className="h-full w-full rounded-md object-cover"
         />
       ) : (
+        
         <Player
           ref={playerRef}
           aspectRatio="16:9"
@@ -184,6 +183,7 @@ const VideoDetails = () => {
           onEnded={() => setVideoEnded(true)}
           src={videoData?.videoUrl}
         >
+          {/* {console.log(videoData.videoUrl)} */}
           <BigPlayButton position="center" />
           {/* Render When Video Ends */}
           {videoEnded && (
@@ -243,7 +243,6 @@ const VideoDetails = () => {
       <p className="pt-2 pb-6">{videoData?.description}</p>
     </div>
   )
-}
+};
 
-export default VideoDetails
-// video
+export default VideoDetails;

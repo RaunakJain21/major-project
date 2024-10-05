@@ -1,10 +1,10 @@
-import React from "react";
-
-// Importing React Icons
-import { HiUsers } from "react-icons/hi";
-import { ImTree } from "react-icons/im";
+import React from "react"
+import {HiUsers} from "react-icons/hi"
+import {BiSolidBookContent} from "react-icons/bi"
 
 const CourseCard = ({cardData, currentCard, setCurrentCard}) => {
+
+
   return (
     <div
       className={`w-[360px] lg:w-[30%] ${
@@ -39,12 +39,12 @@ const CourseCard = ({cardData, currentCard, setCurrentCard}) => {
 
         {/* Flow Chart */}
         <div className="flex items-center gap-2 text-[16px]">
-          <ImTree />
-          <p>{cardData?.lessionNumber} Lession</p>
+          <BiSolidBookContent/>
+          <p>{cardData?.lessionNumber} Lesson</p>
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default CourseCard;

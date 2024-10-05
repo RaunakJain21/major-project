@@ -2,15 +2,15 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Outlet, useParams } from "react-router-dom"
 
-import CourseReviewModal from "../components/core/ViewCourse/CourseReviewModal"
-import VideoDetailsSidebar from "../components/core/ViewCourse/VideoDetailsSidebar"
+import CourseReviewModal from "../Components/Core/ViewCourse/CourseReviewModal";
+import VideoDetailsSidebar from "../Components/Core/ViewCourse/VideoDetailsSidebar"
 import { getFullDetailsOfCourse } from "../services/operations/courseDetailsAPI"
 import {
   setCompletedLectures,
   setCourseSectionData,
   setEntireCourseData,
   setTotalNoOfLectures,
-} from "../slices/viewCourseSlice"
+} from "../Slice/viewCourseSlice"
 
 export default function ViewCourse() {
   const { courseId } = useParams()

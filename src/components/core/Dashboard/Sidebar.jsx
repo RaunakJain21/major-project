@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 
 import { sidebarLinks } from "../../../data/dashboard-links"
 import { logout } from "../../../services/operations/authAPI"
-import ConfirmationModal from "../../common/ConfirmationModal"
+import ConfirmationModal from "../../Common/ConfirmationModal"
 import SidebarLink from "./SidebarLink"
 
 export default function Sidebar() {
@@ -28,7 +28,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="flex h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10">
+      <div className="flex min-h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10">
         <div className="flex flex-col">
           {sidebarLinks.map((link) => {
             if (link.type && user?.accountType !== link.type) return null

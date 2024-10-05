@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import ReactStars from "react-rating-stars-component"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
-
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/free-mode"
@@ -11,31 +10,33 @@ import "../../App.css"
 // Icons
 import { FaStar } from "react-icons/fa"
 // Import required modules
-import { Autoplay, FreeMode, Pagination } from "swiper"
+import { Autoplay, FreeMode, Pagination } from "swiper/modules"
 
 // Get apiFunction and the endpoint
-import { apiConnector } from "../../services/apiconnector"
+import { apiConnector } from "../../services/apiConnector"
 import { ratingsEndpoints } from "../../services/apis"
 
-function ReviewSlider() {
-  const [reviews, setReviews] = useState([])
-  const truncateWords = 15
+const ReviewSlider = () => {
 
-  useEffect(() => {
-    ;(async () => {
-      const { data } = await apiConnector(
-        "GET",
-        ratingsEndpoints.REVIEWS_DETAILS_API
-      )
-      if (data?.success) {
-        setReviews(data?.data)
-      }
-    })()
-  }, [])
+    const [reviews,setReviews] = useState([]);
+    const truncateWords = 15;
 
-  // console.log(reviews)
+    useEffect(()=>{
+        const fetchAllReviews = async ()=>{
+            const response = await apiConnector("GET",ratingsEndpoints.REVIEWS_DETAILS_API);
+            console.log("logged reviews->",response);
 
-  return (
+            const {data} = response;
+
+            if(data?.success){
+                setReviews(data?.data);
+            }
+
+        }
+        fetchAllReviews();
+},[])
+
+return (
     <div className="text-white">
       <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
@@ -48,7 +49,7 @@ function ReviewSlider() {
             disableOnInteraction: false,
           }}
           modules={[FreeMode, Pagination, Autoplay]}
-          className="w-full "
+          className="w-full"
         >
           {reviews.map((review, i) => {
             return (

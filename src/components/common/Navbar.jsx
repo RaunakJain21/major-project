@@ -6,10 +6,29 @@ import { Link, matchPath, useLocation } from "react-router-dom"
 
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
-import { apiConnector } from "../../services/apiconnector"
+import { apiConnector } from "../../services/apiConnector"
 import { categories } from "../../services/apis"
 import { ACCOUNT_TYPE } from "../../utils/constants"
-import ProfileDropdown from "../core/Auth/ProfileDropDown"
+import ProfileDropdown from "../Core/Auth/ProfileDropdown"
+
+// const subLinks = [
+//   {
+//     title: "Python",
+//     link: "/catalog/python",
+//   },
+//   {
+//     title: "javascript",
+//     link: "/catalog/javascript",
+//   },
+//   {
+//     title: "web-development",
+//     link: "/catalog/web-development",
+//   },
+//   {
+//     title: "Android Development",
+//     link: "/catalog/Android Development",
+//   },
+// ];
 
 function Navbar() {
   const { token } = useSelector((state) => state.auth)
@@ -20,20 +39,23 @@ function Navbar() {
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    ;(async () => {
-      setLoading(true)
-      try {
-        const res = await apiConnector("GET", categories.CATEGORIES_API)
-        setSubLinks(res.data.data)
-      } catch (error) {
-        console.log("Could not fetch Categories.", error)
-      }
-      setLoading(false)
-    })()
-  }, [])
+  const getCats = async () => {
+    setLoading(true)
+    try {
+      const res = await apiConnector("GET", categories.CATEGORIES_API)
+      setSubLinks(res.data.data)
+    } catch (error) {
+      console.log("Could not fetch Categories.", error)
+    }
+    setLoading(false)
+  }
 
-  // console.log("sub links", subLinks)
+  useEffect(()=>{
+    getCats();
+  },[]);
+
+
+  console.log("sub links", subLinks)
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
@@ -51,7 +73,7 @@ function Navbar() {
           <img src={logo} alt="Logo" width={160} height={32} loading="lazy" />
         </Link>
         {/* Navigation links */}
-        <nav className="hidden md:block">
+        <nav className="hidden md:block mr-[100px]">
           <ul className="flex gap-x-6 text-richblack-25">
             {NavbarLinks.map((link, index) => (
               <li key={index}>
@@ -68,14 +90,11 @@ function Navbar() {
                       <BsChevronDown />
                       <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]">
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
-                        {/* {loading ? (
+                        {loading ? (
                           <p className="text-center">Loading...</p>
                         ) : subLinks.length ? (
                           <>
                             {subLinks
-                              ?.filter(
-                                (subLink) => subLink?.courses?.length > 0
-                              )
                               ?.map((subLink, i) => (
                                 <Link
                                   to={`/catalog/${subLink.name
@@ -91,7 +110,7 @@ function Navbar() {
                           </>
                         ) : (
                           <p className="text-center">No Courses Found</p>
-                        )}  */}
+                        )}
                       </div>
                     </div>
                   </>

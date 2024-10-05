@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import RatingStars from '../../common/RatingStars'
-import GetAvgRating from '../../../utils/avgRating';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
-const Course_Card = ({course, Height}) => {
+import GetAvgRating from "../../../utils/avgRating"
+import RatingStars from "../../Common/RatingStars"
 
+function Course_Card({ course, Height }) {
+  // const avgReviewCount = GetAvgRating(course.ratingAndReviews)
+  // console.log(course.ratingAndReviews)
+  const [avgReviewCount, setAvgReviewCount] = useState(0)
+  useEffect(() => {
+    const count = GetAvgRating(course.ratingAndReviews)
+    setAvgReviewCount(count)
+  }, [course])
+  // console.log("count............", avgReviewCount)
 
-    const [avgReviewCount, setAvgReviewCount] = useState(0);
-
-    useEffect(()=> {
-        const count = GetAvgRating(course.ratingAndReviews);
-        setAvgReviewCount(count);
-    },[course])
-
-
-    
   return (
     <>
       <Link to={`/courses/${course._id}`}>
