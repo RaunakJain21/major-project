@@ -1,7 +1,7 @@
-# StudyNotion
+# EduHub
 **Live Link**: https://edtechplatform-21.netlify.app/
 
-**StudyNotion** is an ed-tech platform that enables users to create, consume, and rate educational content. Built with the MERN stack (MongoDB, ExpressJS, ReactJS, NodeJS), it aims to provide an immersive and interactive learning experience.
+**EduHub** is an ed-tech platform that enables users to create, consume, and rate educational content. Built with the MERN stack (MongoDB, ExpressJS, ReactJS, NodeJS), it aims to provide an immersive and interactive learning experience.
 
 ## Features
 
@@ -37,7 +37,7 @@ The platform uses a RESTful API design. Key endpoints include:
 
 ## Deployment
 
-- **Frontend:** Hosted on Vercel
+- **Frontend:** Hosted on Netlify
 - **Backend:** Hosted on Render or Railway
 - **Database:** MongoDB Atlas
 - **Media Files:** Stored on Cloudinary
